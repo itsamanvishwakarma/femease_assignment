@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
+// LazyImage component for lazy loading images
 function LazyImage({ src, alt, style }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef();
@@ -57,6 +58,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch breeds based on the selected animal type
   const fetchBreeds = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -78,6 +80,7 @@ export default function App() {
     }
   }, [animalType]);
 
+  // Fetch animals based on the selected breed or all animals if no breed is selected
   const fetchAnimals = useCallback(
     async (breed = "") => {
       setIsLoading(true);
@@ -103,16 +106,19 @@ export default function App() {
     [animalType]
   );
 
+  // Fetch breeds and animals when the animal type changes
   useEffect(() => {
     fetchBreeds();
     fetchAnimals();
   }, [animalType, fetchBreeds, fetchAnimals]);
 
+  // Handle breed selection change
   const handleBreedChange = (e) => {
     setSelectedBreed(e.target.value);
     fetchAnimals(e.target.value);
   };
 
+  // Handle search functionality for breeds
   const handleSearch = () => {
     const filteredBreed = breeds.find((breed) =>
       breed.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -125,12 +131,14 @@ export default function App() {
     }
   };
 
+  // Handle animal type change (cat/dog)
   const handleAnimalTypeChange = (e) => {
     setAnimalType(e.target.value);
     setSelectedBreed("");
     setSearchTerm("");
   };
 
+  // Get the breed name from the animal object
   const getBreedName = (animal) => {
     return animal.breeds && animal.breeds.length > 0
       ? animal.breeds[0].name
